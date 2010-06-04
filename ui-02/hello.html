@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf8">
+  <title>hello</title>
+  <script src="../../closure/closure-library/closure/goog/base.js"></script>
+  <script src="http://maps.google.com/maps/api/js?sensor=false&language=en">
+  </script>
+  <link rel="stylesheet"
+        href="http://meyerweb.com/eric/tools/css/reset/reset.css">
+  <link rel="stylesheet"
+        href="../../closure/closure-library/closure/goog/css/common.css">
+  <script>
+  goog.require('goog.dom');
+  goog.require('goog.events');
+  goog.require('goog.events.EventType');
+
+  goog.require('goog.ui.Component');
+  goog.require('goog.ui.SplitPane');
+  goog.require('goog.ui.SplitPane.Orientation');
+  
+  goog.provide('py');
+  </script>
+  <style>
+  .goog-splitpane-handle {
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+    background: #ccc;
+    position: absolute;
+  }
+
+  .goog-splitpane-handle-horizontal {
+    cursor: col-resize;
+  }
+
+  .goog-splitpane-handle-vertical {
+    cursor: row-resize;
+  }
+
+  .goog-splitpane-first-container,
+  .goog-splitpane-second-container {
+    border: none;
+    overflow: auto;
+    position: absolute;
+  }
+
+  #map {
+    height: 100%;
+    width: 100%;
+  }
+
+  #split-pane {
+    width: 100%;
+  }
+
+  html, body {
+    height: 100%;
+  }
+  </style>
+</head>
+<body>
+  <div id="header">
+    <h1>header</h1>
+  </div>
+
+  <div id="split-pane">
+    <div class="goog-splitpane-first-container">sidebar</div>
+    <div class="goog-splitpane-second-container">
+      <div id="map"></div>
+    </div>
+    <div class="goog-splitpane-handle"></div>
+  </div>
+
+  <div id="footer">
+    footer
+  </div>
+
+  <script>
+  var header = goog.dom.getElement('header');
+  var footer = goog.dom.getElement('footer');
+
+  var getContentPaneSize = function() {
+    var headerSize = goog.style.getSize(header);
+    var footerSize = goog.style.getSize(footer);
+    var viewportSize = goog.dom.getViewportSize();
+
+    return new goog.math.Size(
+        viewportSize.width,
+        viewportSize.height - (headerSize.height + footerSize.height + 4));
+  };
+
+  // Initialize main pane
+  var lhs = new goog.ui.Component();
+  var rhs = new goog.ui.Component();
+
+  var splitpane = new goog.ui.SplitPane(lhs, rhs,
+      goog.ui.SplitPane.Orientation.HORIZONTAL);
+  splitpane.setInitialSize(300);
+  splitpane.setHandleSize(5);
+  splitpane.decorate(goog.dom.getElement('split-pane'));
+  splitpane.setSize(getContentPaneSize());
+
+  goog.events.listen(window, goog.events.EventType.RESIZE, function(e){
+    splitpane.setSize(getContentPaneSize());
+  });
+
+  // Initialize map
+  var center = new google.maps.LatLng(41.03585891144303, 28.975067138671875);
+  var map = new google.maps.Map(goog.dom.getElement('map'), {
+    center: center,
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    zoom: 12
+  });
+  
+  /**
+   * @typedef {{id: number, name: string}}
+   */
+  py.Place = goog.typedef;
+  
+  
+  /**
+   * @param {Array.<kartaca.istanbul.model.Place>} places
+   * @constructor
+   */
+  py.PlaceList = function(places) {
+    /**
+     * @type {Array.<kartaca.istanbul.model.Place>}
+     * @private
+     */
+    this.places_ = goog.array.clone(places);
+  };
+  
+  /**
+   * @return {Array.<kartaca.istanbul.model.Place>} All the places on this
+   *          list.
+   */
+  py.PlaceList.prototype.getPlaces = function() {
+    return this.places_;
+  };
+  
+  
+  /**
+   * PlaceListItemRenderer
+   * @constructor
+   * @extends {goog.ui.ControlRenderer}
+   */
+  py.PlaceListItemRenderer = function() {
+    goog.ui.ControlRenderer.call(this);    
+  };
+  goog.inherits(py.PlaceListItemRenderer,
+                goog.ui.ControlRenderer);
+  goog.addSingletonGetter(py.PlaceListItemRenderer);
+  
+  goog.ui.registry.setDefaultRenderer(
+      py.PlaceListItemControl,
+      py.PlaceListItemRenderer);
+  
+  py.PlaceListItemRenderer.CSS_CLASS = 
+      'k-place-item-renderer';
+  
+  /** @enum {string} */
+  py.PlaceListItemRenderer.IdFragment = {
+    NAME: 'n',
+    SUMMARY: 's'
+  };
+  
+  /**
+   * @param {*} context
+   * @return {string}
+   */
+  py.PlaceListItemRenderer.createInnerHtml = function(context) {
+    /*
+      TODO replace this with closure template
+    */
+    return '<div><div id="' + context.placeId + '">' + 
+        goog.string.htmlEscape(context.placeName) + '</div></div>';
+  };
+  
+  /**
+   * @{inheritDoc}
+   */
+  py.PlaceListItemRenderer.prototype.getCssClass = function() {
+    return py.PlaceListItemRenderer.CSS_CLASS;
+  };
+  
+  /**
+   * @{inheritDoc}
+   */
+  py.PlaceListItemRenderer.prototype.createDom = function(control) {
+    var el = py.PlaceListItemRenderer.superClass_.createDom.call(this, control);
+    
+  };
+  
+  </script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf8">
+  <link rel="stylesheet"
+        href="../../closure/closure-library/closure/goog/css/common.css">
+  <script src="../../closure/closure-library/closure/goog/base.js"></script>
+  <script>
+  goog.require('goog.graphics');
+  goog.require('goog.events');
+  goog.require('goog.events.KeyCodes');
+  goog.require('goog.events.KeyHandler');
+  </script>
+</head>
+<body>
+  <div id="shapes"></div>
+  
+  <script>
+  var graphics = goog.graphics.createGraphics(200, 150);
+  
+  // define the colors for the squares
+  var squareFill = new goog.graphics.SolidFill('yellow');
+  var squareStroke = new goog.graphics.Stroke(2, 'green');
+  var dotFill = new goog.graphics.SolidFill('blue');
+  var dotStroke = new goog.graphics.Stroke(1, 'black');
+  
+  // the dot's initial position
+  var dot = {x: 1, y: 1};
+  
+  // properties
+  var size = 40;
+  var margin = 5;
+  var width = size - margin;
+  var numRows = 3;
+  var numCols = 4;
+  
+  // draw the squares
+  for (var x = 0; x < numCols; x++) {
+    for (var y = 0; y < numRows; y++) {
+      graphics.drawRect(
+          margin + x * size,
+          margin + y * size,
+          width,
+          width,
+          squareStroke,
+          squareFill);
+    }
+  }
+  
+  // draw the dot
+  dot.graphic = graphics.drawEllipse(
+      margin + dot.x * size + width / 2,
+      margin + dot.y * size + width / 2,
+      width / 4,
+      width / 4,
+      dotStroke,
+      dotFill);
+  
+  // call if the dot's position changes
+  redrawDot = function() {
+    dot.graphic.setCenter(margin + dot.x * size + width / 2,
+                          margin + dot.y * size + width / 2);
+  };
+  
+  // Key event handler
+  var keyHandler = new goog.events.KeyHandler(document);
+  var keyEvent = function(e) {
+    if (e.keyCode == goog.events.KeyCodes.UP && dot.y > 0) {
+      dot.y -= 1;
+    } else if (e.keyCode == goog.events.KeyCodes.RIGHT
+               && dot.x <= numCols - 2) {
+      dot.x += 1;
+    } else if (e.keyCode == goog.events.KeyCodes.DOWN
+               && dot.y <= numRows - 2) {
+      dot.y += 1;
+    } else if (e.keyCode == goog.events.KeyCodes.LEFT
+               && dot.x > 0) {
+      dot.x -= 1;
+    }
+    redrawDot();
+  };
+  
+  // put everything together
+  goog.events.listen(keyHandler, 'key', keyEvent);
+  graphics.render(goog.dom.getElement('shapes'));
+  
+  </script>
+</body>
+</html>

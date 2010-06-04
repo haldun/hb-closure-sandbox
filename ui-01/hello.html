@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf8">
+  <script src="../../closure/closure-library/closure/goog/base.js"></script>
+  <script>
+    goog.require('goog.ui.Component');
+    
+    goog.require('goog.events');
+    goog.require('goog.ui.Button');
+    goog.require('goog.ui.CustomButton');
+    
+    goog.require('goog.debug.DivConsole');    
+    goog.require('goog.debug.Logger');
+    goog.require('goog.debug.LogManager');
+  </script>
+  <link rel="stylesheet" href="../../closure/closure-library/closure/goog/css/common.css">
+  <link rel="stylesheet" href="../../closure/closure-library/closure/goog/css/custombutton.css">
+</head>
+<body>
+  <div id="empty-div">Button</div>
+  
+  <button id="button-1">Button 1</button>
+  
+  
+  <div id="log"></div>
+  <script>
+  // Setup a logger
+  goog.debug.LogManager.getRoot().setLevel(goog.debug.Logger.Level.ALL);
+  var logger = goog.debug.Logger.getLogger('demo');
+  var logconsole = new goog.debug.DivConsole(goog.dom.getElement('log'));
+  logconsole.setCapturing(true);
+  
+  logger.info("naber lan");
+  logger.warning("sikik");
+  
+  
+  
+  // decorate a button
+  var button = new goog.ui.CustomButton(null);
+  button.decorate(goog.dom.getElement('empty-div'));
+  button.setCaption('The button label');
+  
+  </script>
+  
+  <style>
+  .gmail-buttons { font-size: 11px } 
+  .gmail-buttons .goog-custom-button-inner-box { padding: 3px 8px }
+  .archive-button-label { font-weight: bold }
+</style>
+<div class="gmail-buttons">
+  <div id="archive"><span class="archive-button-label">Archive</span></div
+    ><div id="spam">Report spam</div
+    ><div id="delete">Delete</div>
+</div>
+<script>
+  var archiveButton = new goog.ui.CustomButton(null /* content */);
+  archiveButton.decorate(goog.dom.getElement('archive'));
+  archiveButton.setCollapsed(goog.ui.Button.Side.END);
+
+  var spamButton = new goog.ui.CustomButton(null /* content */);
+  spamButton.decorate(goog.dom.getElement('spam'));
+  spamButton.setCollapsed(goog.ui.Button.Side.START | goog.ui.Button.Side.END);
+
+  var deleteButton = new goog.ui.CustomButton(null /* content */); 
+  deleteButton.decorate(goog.dom.getElement('delete'));
+  deleteButton.setCollapsed(goog.ui.Button.Side.START);
+  
+  goog.events.listen(archiveButton, goog.events.EventType.CLICK, function(e){
+    logger.info("amuna korum");
+    console.log("asldsad");
+  });
+  
+</script>
+</body>
+</html>

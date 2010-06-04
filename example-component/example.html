@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf8">
+  <link rel="stylesheet"
+        href="../../closure/closure-library/closure/goog/css/common.css">
+  <link rel="stylesheet"
+        href="../../closure/closure-library/closure/goog/css/menus.css">
+  <link rel="stylesheet"
+        href="../../closure/closure-library/closure/goog/css/combobox.css">
+  <script src="../../closure/closure-library/closure/goog/base.js"></script>
+  <script>
+  goog.require('goog.debug.DivConsole');
+  goog.require('goog.debug.Logger');
+  goog.require('goog.debug.LogManager');
+  goog.require('goog.dom');
+  goog.require('goog.dom.classes');
+  goog.require('goog.events.EventHandler');
+  goog.require('goog.events.EventType');
+  goog.require('goog.events.KeyCodes');
+  goog.require('goog.events.KeyHandler');
+  goog.require('goog.events.KeyHandler.EventType');
+  goog.require('goog.ui.Component');
+  goog.require('goog.ui.Container');
+  goog.require('goog.ui.Control');
+  goog.require('goog.ui.ComboBox');
+  goog.require('goog.ui.ComboBoxItem');
+  </script>
+  <script src="samplecomponent.js"></script>
+  <style type="text/css" media="screen">
+    .use-arrow .goog-combobox {
+      padding-right: 0.6ex;
+    }
+    .goog-combobox {
+/*      border-right: 2px;*/
+      margin-right: 0px;
+      padding-right: 0px;
+      border: 1px solid #ccc !important;
+      font-size: 10px;
+      line-height: 18px !important;
+      padding-bottom: 3px;
+    }
+    .goog-combobox-active {
+      border-color: red;
+    }
+    #log {
+      max-height: 300px;
+      overflow: scroll;
+    }
+  </style>
+</head>
+<body>
+  <div id="c1">
+  </div>
+
+  <div id="box1container"></div>
+  <br>
+  
+  <div id="box2"></div>
+  <div id="log"></div>
+
+  <script>
+    // Set up the logger
+    goog.debug.LogManager.getRoot().setLevel(goog.debug.Logger.Level.ALL);
+    var logger = goog.debug.Logger.getLogger('example');
+    var logconsole = new goog.debug.DivConsole(goog.dom.getElement('log'))
+    logconsole.setCapturing(true);
+    
+    var comboBox = new goog.ui.ComboBox();    
+    var items = ["Hede 1", "Hede 2", "Hede 3"];
+    for (var i = 0; i < items.length; i++) {
+      comboBox.addItem(new goog.ui.ComboBoxItem(items[i]));
+    }
+    comboBox.setDefaultText('selecttt');
+    comboBox.setUseDropdownArrow(true);
+    
+    var onChange = function(event) {
+      var cb = event.target;
+      logger.info("The value of the combobox is " + cb.getValue());
+    };
+    goog.events.listen(comboBox, goog.ui.Component.EventType.CHANGE,
+        onChange);
+      
+    comboBox.render(goog.dom.getElement('box1container'));
+
+    // var box1 = new example.SampleComponent();
+    // box1.render(goog.dom.getElement('box1container'));
+    //
+    // var box2 = new example.SampleComponent('sikeks');
+    // box2.decorate(goog.dom.getElement('box2'));
+    //
+    // var control1 = new goog.ui.Control('click me');
+    // control1.render(document.body);
+    //
+    // goog.events.listen(control1, goog.ui.Component.EventType.ACTION,
+    //     function(event) {
+    //       logger.info("ehel mehel");
+    //       var control = event.target;
+    //
+    //       if (control.getCaption() == 'click me') {
+    //         control.setCaption('You clicked me!');
+    //       } else {
+    //         control.setCaption('click me');
+    //       }
+    //     });
+
+  </script>
+</body>
+</html>
